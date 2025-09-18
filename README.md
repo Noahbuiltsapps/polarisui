@@ -12,4 +12,4 @@ Please check out the [contributing guide](./CONTRIBUTING.md) before opening a PR
 
 ## License  
 
-Licensed under the [MIT license](./LICENSE).
+Licensed under the [MIT license](./LICENSE.md).
