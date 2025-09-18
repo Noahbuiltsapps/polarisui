@@ -1,12 +1,9 @@
-#!/usr/bin/env node
-
 import { Command } from "commander";
 import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Workaround für __dirname in ESModules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -23,7 +20,6 @@ program
   .action((component) => {
     const componentsDir = path.join(process.cwd(), "app/components");
 
-    // Ensure components dir exists
     if (!fs.existsSync(componentsDir)) {
       fs.mkdirSync(componentsDir, { recursive: true });
     }
