@@ -1,2 +1,1 @@
-## Example
-- [Noahbuiltsapps](https://github.com/noahbuiltsapps) – Inital commit + created Herocard & Settingsblobs
+- [Noahbuiltsapps](https://github.com/noahbuiltsapps) – Inital commit + created `Settingsblobs` & `Herocard`
