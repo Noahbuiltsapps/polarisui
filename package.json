@@ -1,6 +1,6 @@
 {
   "name": "polarisui-cli",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "CLI for adding prebuilt Polaris UI components to Remix apps",
   "bin": {
     "polarisui": "bin/index.js"

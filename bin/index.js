@@ -13,29 +13,61 @@ const program = new Command();
 
 program
   .name("polarisui")
-  .description("CLI to add Polaris UI components")
-  .version("1.0.0");
+  .description("CLI to add Polaris UI components or blocks")
+  .version("1.2.0");
 
 program
-  .command("add <component>")
-  .description("Add a PolarisUI component to your project")
-  .action((component) => {
-    const componentsDir = path.join(process.cwd(), "app/components");
+  .command("add <name>")
+  .description("Add a PolarisUI component or block to your project")
+  .action((name) => {
+    const cwd = process.cwd();
+    const componentsDir = path.join(cwd, "app/components");
+    const routesDir = path.join(cwd, "app/routes");
 
     if (!fs.existsSync(componentsDir)) {
       fs.mkdirSync(componentsDir, { recursive: true });
     }
-
-    const templatePath = path.join(__dirname, "../templates", `${component}.tsx`);
-    const destPath = path.join(componentsDir, `${component}.tsx`);
-
-    if (!fs.existsSync(templatePath)) {
-      console.log(chalk.red(`❌ Component "${component}" not found.`));
-      process.exit(1);
+    if (!fs.existsSync(routesDir)) {
+      fs.mkdirSync(routesDir, { recursive: true });
     }
 
-    fs.copyFileSync(templatePath, destPath);
-    console.log(chalk.green(`✅ ${component}.tsx has been added to app/components`));
+    // --- Check for component ---
+    const componentTemplatePath = path.join(__dirname, "../templates/components", `${name}.tsx`);
+    if (fs.existsSync(componentTemplatePath)) {
+      const destPath = path.join(componentsDir, `${name}.tsx`);
+      fs.copyFileSync(componentTemplatePath, destPath);
+      console.log(chalk.green(`✅ Component "${name}.tsx" has been added to app/components`));
+      return;
+    }
+
+    // --- Check for block ---
+    const blockTemplatePath = path.join(__dirname, "../templates/blocks", `${name}.tsx`);
+    if (fs.existsSync(blockTemplatePath)) {
+      const destPath = path.join(routesDir, `app.${name}.tsx`);
+      fs.copyFileSync(blockTemplatePath, destPath);
+      console.log(chalk.green(`✅ Block "app.${name}.tsx" has been added to app/routes`));
+
+      // Check if block has dependencies (deps.json)
+      const depsConfigPath = path.join(__dirname, "../templates/blocks", `${name}.deps.json`);
+      if (fs.existsSync(depsConfigPath)) {
+        const deps = JSON.parse(fs.readFileSync(depsConfigPath, "utf-8"));
+        deps.components.forEach((component) => {
+          const compTemplatePath = path.join(__dirname, "../templates/components", `${component}.tsx`);
+          const compDestPath = path.join(componentsDir, `${component}.tsx`);
+
+          if (fs.existsSync(compTemplatePath)) {
+            fs.copyFileSync(compTemplatePath, compDestPath);
+            console.log(chalk.yellow(`➡️ Imported dependency component: ${component}.tsx`));
+          } else {
+            console.log(chalk.red(`⚠️ Missing dependency template: ${component}.tsx`));
+          }
+        });
+      }
+      return;
+    }
+
+    console.log(chalk.red(`❌ No component or block named "${name}" found in templates.`));
+    process.exit(1);
   });
 
 program.parse(process.argv);
