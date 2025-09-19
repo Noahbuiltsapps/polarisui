@@ -25,8 +25,26 @@ Before submitting a pull request, please make sure your contribution follows the
 
 When adding a new component:  
 
-- Place it inside the `/template` folder, following the same structure as the other components  
-- Add yourself to the `CONTRIBUTORS.md` file, following the provided example  
+- Place it inside the `/templates/components` folder, following the same structure as the other components  
+- Add yourself to the `CONTRIBUTORS.md` file, following the provided example
+
+## Adding a New Block  
+
+When adding a new block (complex UI patterns that combine multiple components or a full page):  
+
+- Place it inside the `/templates/blocks` folder  
+- If your block uses other PolarisUI components, create a `.deps.json` file alongside your block  
+- The `.deps.json` file should list all PolarisUI components used in the block, for example:  
+  ```json
+  {
+    "components": [
+      "herocard",
+      "settingsblobs",
+      "feedbackcard"
+    ]
+  }
+  ```
+- This helps users understand dependencies and ensures all required components are installed when using the block  
 
 ## Pull Requests  
 
